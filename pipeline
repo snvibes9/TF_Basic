@@ -1,0 +1,37 @@
+# Automating AFT Account Customization Pipeline Notifications
+
+# Step 1: Create a GitHub Repository
+
+Create a new GitHub repository, for example:
+
+repo name: aft-account-pipeline-notifications
+
+
+This repo will contain your reusable Terraform modules for:
+
+Event Bridge Rule & SNS Topic
+
+# Step 2: Create Terraform Modules
+
+📁 aft-account-pipeline-notifications/
+├── modules/
+│   ├── event_rule/
+│   └── sns_topic/
+
+Each of the event_rule and sns_topic folders should contain the Terraform code for the respective resource, including:
+
+main.tf, variables.tf, outputs.tf
+
+# Step 3: Add Root Terraform Configuration
+
+Now, create a Terraform root configuration to wire both modules together. This should go into the AFT management account folder of your AFP AFT Account Customization repository.
+
+repo: afp_aft_account_cust
+
+path: /account-aft-management/terraform/event_rule_sns.tf
+
+This event_rule_sns.tf (main) will reference both the event_rule and sns_topic modules
+
+# Step 4: Deploy via AFT Customization Pipeline
+
+Once the Terraform code is committed from my feature branch to the peorg branch, AFT will detect the changes as a customization step. The Terraform code will then be automatically deployed via the AFT Account Customization Pipeline.
