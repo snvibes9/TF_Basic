@@ -1,0 +1,11 @@
+Source S3 Bucket (Payer account): afp-curbill-prd-accountid-ue1 (Raw Cost and Usage Report (CUR) data exported from AWS and will replicate it to destination bucket from Anaplan account)
+
+Destination S3 Bucket : afp-billing-accountid-ue1 -> Folder: bills -> anaplan_focus (Raw Cost and Usage Report (CUR) data exported from AWS)
+							     direct (The raw data from anaplan_focus will be directly broken into small chunks for processing)
+							     final (It retrieves the data directly and aggregates it based on that)
+							     
+							     chargeback (Used for bill reconciliation and shared costs that will be charged back to tenants)
+
+						     Folder: Anaplan -> final (This is the output of the final processed billing report)
+	
+		       	                             Folder: glue (This folder contains the scripts for Glue jobs that help transform the raw data into the required format)
