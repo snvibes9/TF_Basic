@@ -1,0 +1,16 @@
+Anaplan S3 Folders Data Flow:
+
+Source S3 Bucket (Payer Account): The S3 bucket "afp-curbill-prd-xxx-ue1" in the root (payer) account stores the raw Cost and Usage Report (CUR) data exported from the AWS Billing and Cost Management console. Once the data export is published to this source S3 bucket, cross-region replication is enabled to replicate the data to the destination S3 bucket ("afp-billing-100932270649-ue1").
+
+Destination S3 Bucket: The replicated data is populated in the destination S3 bucket ("afp-billing-100932270649-ue1") within a few minutes under the folder structure: bills -> anaplan_focus. This folder contains the raw Cost and Usage Report (CUR) data replicated from the source S3 bucket.
+
+Data Processing: The raw data in the anaplan_focus folder is processed in smaller chunks using the AWS Glue script tf-afp-prd-awscur-etl. This script filters selected fields from the tf-afp-prd-rawcur table (48 columns) and transforms them into a 16-column format required for the tf-afp-prd-direct table. The processed data is then stored in the direct table and its corresponding folder in the destination S3 bucket.
+
+Chargeback Processing: For bill reconciliation and shared cost allocation, the AWS Glue script tf-afp-prd-chargeback-etl processes the data. It filters the app_said field to ensure it is not null and updates it with relevant chargeback cost details. The processed data is stored in the tf-afp-prd-chargeback table and the corresponding chargeback folder in the destination S3 bucket.
+
+Final Processing: The data is aggregated and processed using the AWS Glue script tf-afp-prd-formatbill-etl as per the Anaplan team's requirements. The output is stored in the final folder, where a temporary path holds the formatted data before it is consolidated into a single file.
+
+Folder Structure:
+
+Anaplan -> final: Contains the final processed billing report in CSV format, consolidated into a single file.
+glue: Contains the scripts for AWS Glue jobs that transform the raw data into the required format.
